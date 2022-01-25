@@ -40,6 +40,16 @@ export default class MembersStore {
     // }];
     console.log('Done membersRead', this.members);
   }
+
+  membersDelete(index) {
+    this.members.splice(index, 1);
+    console.log('Done membersDelete', this.members);
+  }
+
+  membersUpdate(index, member) {
+    this.members[index] = member;
+    console.log('Done membersUpdate', this.members);
+  }
 }
 
 export const membersStore = new MembersStore();
