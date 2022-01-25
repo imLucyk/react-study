@@ -1,4 +1,6 @@
 import { configure, makeAutoObservable } from 'mobx';
+import axios from 'axios';
+import { axiosError } from './Common.js';
 
 configure({
   enforceActions: 'never',
@@ -10,45 +12,46 @@ export default class MembersStore {
     makeAutoObservable(this);
   }
 
-  members = [{
-    name: '홍길동',
-    age: 20
-  }, {
-    name: '춘향이',
-    age: 16
-  }];
+  members = [];
   member = {
     name: '',
     age: ''
   };
 
   membersCreate() {
-    this.members.push({
-      name: this.member.name,
-      age: this.member.age
+    axios.post('http://localhost:3100/api/v1/members', this.member).then((response) => {
+      console.log('Done membersCreate', response);
+      this.membersRead();
+    }).catch((error) => {
+      axiosError(error);
     });
-    console.log('Done membersCreate', this.members);
   }
   
   membersRead() {
-    // this.members = [{
-    //   name: '홍길동',
-    //   age: 20
-    // }, {
-    //   name: '춘향이',
-    //   age: 16
-    // }];
-    console.log('Done membersRead', this.members);
+    axios.get('http://localhost:3100/api/v1/members').then((response) => {
+      console.log('Done membersRead', response);
+      this.members = response.data.members;
+    }).catch((error) => {
+      axiosError(error);
+    });
   }
 
   membersDelete(index) {
-    this.members.splice(index, 1);
-    console.log('Done membersDelete', this.members);
+    axios.delete('http://localhost:3100/api/v1/members/' + index).then((response) => {
+      console.log('Done membersDelete', response);
+      this.membersRead();
+    }).catch((error) => {
+      axiosError(error);
+    });
   }
 
   membersUpdate(index, member) {
-    this.members[index] = member;
-    console.log('Done membersUpdate', this.members);
+    axios.patch('http://localhost:3100/api/v1/members/' + index, member).then((response) => {
+      console.log('Done membersUpdate', response);
+      this.membersRead();
+    }).catch((error) => {
+      axiosError(error);
+    });
   }
 }
 
