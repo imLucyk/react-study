@@ -31,7 +31,7 @@ function Members(props) {
               <td>{member.age}</td>
               <td>
                 <button>Update</button>
-                <button>Delete</button>
+                <button onClick={() => membersStore.membersDelete(index)}>Delete</button>
               </td>
             </tr>
           ))}
