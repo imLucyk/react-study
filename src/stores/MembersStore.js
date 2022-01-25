@@ -1,4 +1,6 @@
 import { configure, makeAutoObservable } from 'mobx';
+import axios from 'axios';
+import { axiosError } from './Common.js';
 
 configure({
   enforceActions: 'never',
@@ -23,11 +25,12 @@ export default class MembersStore {
   };
 
   membersCreate() {
-    this.members.push({
-      name: this.member.name,
-      age: this.member.age
+    axios.post('http://localhost:3100/api/v1/members', this.member).then((response) => {
+      console.log('Done membersCreate', response);
+      this.membersRead();
+    }).catch((error) => {
+      axiosError(error);
     });
-    console.log('Done membersCreate', this.members);
   }
   
   membersRead() {
