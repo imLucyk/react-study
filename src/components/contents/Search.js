@@ -1,18 +1,29 @@
 import { useState, useEffect } from 'react';
 import { inject, observer } from 'mobx-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Search(props) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  console.log(location)
+  const searchParams = new URLSearchParams(location.search);
+  const spSearch = searchParams.get('q') || '';
   const { membersStore, searchStore } = props;
   const { members } = membersStore;
   const [ q, setQ ] = useState('');
   console.log(q);
   const searchRead = (event) => {
     event.preventDefault();
-    searchStore.searchRead(q);
+    // searchStore.searchRead(q);
+    navigate(`/search?q=${q}`);
   };
+  // useEffect(() => {
+  //   searchStore.searchRead('');
+  // }, [searchStore]);
   useEffect(() => {
-    searchStore.searchRead('');
-  }, [searchStore]);
+    searchStore.searchRead(spSearch);
+    setQ(spSearch);
+  }, [searchStore, spSearch]);
   return (
     <div>
       <h3>Search</h3>
